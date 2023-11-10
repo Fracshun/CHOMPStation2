@@ -263,7 +263,84 @@
 	if(prob(1))
 		new /obj/item/weapon/reagent_containers/food/snacks/tastybread/sequel(src)
 		qdel(src) //Dispose of the body, let no one find it.
-		
+
 /obj/item/weapon/reagent_containers/food/snacks/tastybread/sequel/Initialize()
 	. = ..()
 	bitesize = 4
+
+// Custom cubes for compressing any type of mob
+/obj/item/weapon/reagent_containers/food/snacks/mobcube
+	name = "mystery cube"
+	desc = "Just add water!"
+	flags = OPENCONTAINER
+	icon_state = "monkeycube"
+	bitesize = 12
+	filling_color = "#ADAC7F"
+	center_of_mass = list("x"=16, "y"=14)
+	var/wrapped = 0
+	var/mob/living/voice/compressed_mob = null
+
+/obj/item/weapon/reagent_containers/food/snacks/mobcube/Initialize()
+	. = ..()
+	reagents.add_reagent("protein", 10)
+
+/obj/item/weapon/reagent_containers/food/snacks/mobcube/attack_self(mob/user as mob)
+	if(wrapped)
+		Unwrap(user)
+
+/obj/item/weapon/reagent_containers/food/snacks/mobcube/wrapped
+	desc = "Still wrapped in some paper."
+	icon_state = "monkeycubewrap"
+	flags = 0
+	wrapped = 1
+
+/obj/item/weapon/reagent_containers/food/snacks/mobcube/proc/Unwrap(mob/user as mob)
+	icon_state = "monkeycube"
+	desc = "Just add water!"
+	to_chat(user, "You unwrap the cube.")
+	wrapped = 0
+	flags |= OPENCONTAINER
+	return
+
+/obj/item/weapon/reagent_containers/food/snacks/mobcube/proc/Compress(mob/living/target as mob)
+	target.release_vore_contents(TRUE, TRUE)
+	compressed_mob = new /mob/living/voice(src)
+	compressed_mob.transfer_identity(target)
+	compressed_mob.mind = target.mind
+	compressed_mob.ckey = target.ckey
+	compressed_mob.tf_mob_holder = target
+	target.forceMove(compressed_mob)
+	return
+
+/obj/item/weapon/reagent_containers/food/snacks/mobcube/On_Consume(var/mob/M)
+	if(ishuman(M))
+		var/mob/living/carbon/human/H = M
+		H.visible_message("<span class='warning'>A screeching creature bursts out of [M]'s chest!</span>")
+		var/obj/item/organ/external/organ = H.get_organ(BP_TORSO)
+		organ.take_damage(50, 0, 0, "Animal escaping the ribcage")
+	Expand()
+
+/obj/item/weapon/reagent_containers/food/snacks/mobcube/on_reagent_change()
+	if(reagents.has_reagent("water"))
+		Expand()
+
+/obj/item/weapon/reagent_containers/food/snacks/mobcube/proc/Expand()
+	if(isnull(compressed_mob))
+		src.visible_message("<b>\The [src]</b> dissolves into nothing...")
+		var/mob/randommob = pick(list(
+			/mob/living/simple_mob/animal/passive/mouse,
+			/mob/living/simple_mob/animal/passive/raccoon_ch
+		))
+		randommob = new(get_turf(src))
+		qdel(src)
+		return 1
+	src.visible_message("<b>\The [src]</b> expands!")
+	compressed_mob.tf_mob_holder.mind = compressed_mob.mind
+	compressed_mob.tf_mob_holder.ckey = compressed_mob.ckey
+	compressed_mob.tf_mob_holder.forceMove(get_turf(src))
+	qdel(compressed_mob)
+	if(ismob(loc))
+		var/mob/M = loc
+		M.unEquip(src)
+	qdel(src)
+	return 1
