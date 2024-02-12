@@ -539,6 +539,9 @@ var/global/list/belly_colorable_only_fullscreens = list("a_synth_flesh_mono",
 		"throw_vore" = host.throw_vore,
 		"phase_vore" = host.phase_vore, //CHOMPedit
 		"food_vore" = host.food_vore,
+		//CHOMPEdit Start
+		"spont_belly_default" = host.spont_belly_default,
+		//CHOMPEdit End
 		"nutrition_message_visible" = host.nutrition_message_visible,
 		"nutrition_messages" = host.nutrition_messages,
 		"weight_message_visible" = host.weight_message_visible,
@@ -1983,6 +1986,18 @@ var/global/list/belly_colorable_only_fullscreens = list("a_synth_flesh_mono",
 			//CHOMPEdit End
 			unsaved_changes = TRUE
 			return TRUE
+		//CHOMPEdit Start
+		if("choose_spont_belly_default")
+			var/obj/belly/choice = tgui_input_list(usr, "Choose your default spont belly:","Select Belly", ("Default - Selected Belly" + host.vore_organs))
+			if(!choice) //They cancelled, no changes
+				return FALSE
+			else if(choice == "Default - Selected Belly")
+				host.spont_belly_default = null
+			else
+				host.spont_belly_default = choice.name
+			unsaved_changes = TRUE
+			. = TRUE
+		//CHOMPEdit End
 		if("switch_selective_mode_pref")
 			host.selective_preference = tgui_input_list(usr, "What would you prefer happen to you with selective bellymode?","Selective Bellymode", list(DM_DEFAULT, DM_DIGEST, DM_ABSORB, DM_DRAIN))
 			if(!(host.selective_preference))

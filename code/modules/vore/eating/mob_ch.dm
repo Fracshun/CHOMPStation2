@@ -14,6 +14,8 @@
 	var/no_latejoin_vore_warning_persists = FALSE	//Do we save it?
 	var/no_latejoin_prey_warning_persists = FALSE	//Do we save it?
 
+	var/spont_belly_default					//Default spont nom belly, unset means currently selected
+
 	// CHOMP vore icons refactor (Now on mob)
 	var/vore_capacity = 0				// Maximum capacity, -1 for unlimited
 	var/vore_capacity_ex = list("stomach" = 0) //expanded list of capacities

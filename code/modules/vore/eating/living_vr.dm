@@ -262,6 +262,7 @@
 	P.no_latejoin_prey_warning_time = src.no_latejoin_prey_warning_time
 	P.no_latejoin_vore_warning_persists = src.no_latejoin_vore_warning_persists
 	P.no_latejoin_prey_warning_persists = src.no_latejoin_prey_warning_persists
+	P.spont_belly_default = src.spont_belly_default
 	//CHOMP Stuff End
 
 	var/list/serialized = list()
@@ -331,6 +332,7 @@
 	no_latejoin_prey_warning_time = P.no_latejoin_prey_warning_time
 	no_latejoin_vore_warning_persists = P.no_latejoin_vore_warning_persists
 	no_latejoin_prey_warning_persists = P.no_latejoin_prey_warning_persists
+	spont_belly_default = P.spont_belly_default
 
 	if(bellies)
 		if(isliving(src))

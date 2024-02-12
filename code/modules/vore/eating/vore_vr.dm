@@ -86,6 +86,7 @@ V::::::V           V::::::VO:::::::OOO:::::::ORR:::::R     R:::::REE::::::EEEEEE
 	var/no_latejoin_prey_warning_time = 15 // Only load, when... no_latejoin_vore_warning_persists
 	var/no_latejoin_vore_warning_persists = FALSE
 	var/no_latejoin_prey_warning_persists = FALSE
+	var/spont_belly_default
 	//CHOMP stuff end
 
 	var/list/belly_prefs = list()

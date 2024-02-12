@@ -2526,6 +2526,7 @@ const VoreUserPreferences = (props, context) => {
     permit_healbelly,
     can_be_drop_prey,
     can_be_drop_pred,
+    spont_belly_default,
     drop_vore,
     slip_vore,
     stumble_vore,
