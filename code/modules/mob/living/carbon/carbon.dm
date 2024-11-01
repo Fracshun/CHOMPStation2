@@ -12,6 +12,8 @@
 
 /mob/living/carbon/Life()
 	..()
+	if (skiff)
+		qdel(skiff)
 
 	handle_viruses()
 
