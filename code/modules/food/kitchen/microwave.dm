@@ -580,6 +580,15 @@
 			var/obj/item/holder/H = O
 			if(H.held_mob)
 				qdel(H.held_mob)
+		//CHOMPAdd Start - Possessed food become the chef's failure
+		if(istype(O, /obj/item))
+			var/obj/item/I = O
+			if(I.possessed_voice && I.possessed_voice.len)
+				for(var/mob/living/voice/V in I.possessed_voice)
+					ffuu.inhabit_item(V, null, V.tf_mob_holder, TRUE)
+					I.possessed_voice -= V
+					qdel(V)
+		//CHOMPAdd End
 		qdel(O)
 	src.reagents.clear_reagents()
 	ffuu.reagents.add_reagent("carbon", amount)

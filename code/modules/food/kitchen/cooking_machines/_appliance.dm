@@ -678,6 +678,11 @@
 /obj/machinery/appliance/proc/change_product_strings(var/obj/item/reagent_containers/food/snacks/product, var/datum/cooking_item/CI)
 	product.name = "[cook_type] [product.name]"
 	product.desc = "[product.desc]\nIt has been [cook_type]."
+	//CHOMPAdd Start - Rename possessed food
+	if(product.possessed_voice && product.possessed_voice.len)
+		for(var/mob/living/voice/V in product.possessed_voice)
+			V.name = product.name
+	//CHOMPAdd End
 
 
 /obj/machinery/appliance/proc/change_product_appearance(var/obj/item/reagent_containers/food/snacks/product, var/datum/cooking_item/CI)

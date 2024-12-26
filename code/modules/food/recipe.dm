@@ -201,7 +201,7 @@
 //to decide what to do. They may be used again to make another recipe or discarded, or merged into the results,
 //thats no longer the concern of this proc
 	var/datum/reagents/buffer = new /datum/reagents(10000000000, null)//
-
+	var/list/possessed_food = list() //CHOMPAdd - List to store possessed items
 
 	//Find items we need
 	if (items && items.len)
@@ -217,6 +217,12 @@
 				qdel(hol.held_mob)
 				hol.held_mob = null
 			// Outpost 21 upport end
+			//CHOMPAdd Start - Move possessed voice mobs to the container temporarily
+			if(I.possessed_voice && I.possessed_voice.len)
+				for(var/mob/living/voice/V in I.possessed_voice)
+					V.forceMove(container)
+					possessed_food += V
+			//CHOMPAdd End
 			qdel(I)
 
 	//Find fruits
@@ -308,6 +314,16 @@
 		for (var/i in results)
 			var/atom/a = i //optimisation
 			holder.trans_to(a, total / results.len)
+
+	//CHOMPAdd Start - Move possessed voice mobs to the resulting items
+	if(possessed_food && possessed_food.len)
+		var/obj/item/firstFood = results[1]
+		for(var/mob/living/voice/V in possessed_food)
+			if(istype(firstFood,/obj/item))
+				firstFood.inhabit_item(V, null, V.tf_mob_holder, TRUE)
+			possessed_food -= V
+			qdel(V)
+	//CHOMPAdd End
 
 	return results
 
